@@ -1,4 +1,4 @@
-with open("wafu.txt", "r") as f:
+with open("slepice.txt", "r") as f:
     instructions = f.read()
 pos = [0, 0]
 poses = []
