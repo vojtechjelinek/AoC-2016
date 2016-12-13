@@ -8,10 +8,7 @@ keypad2 = [["x", "x", "1", "x", "x"],
           ["x", "A", "B", "C", "x"],
           ["x", "x", "D", "x", "x"]]
 
-with open("slepice.txt", "r") as f:
-    code = f.read()
-
-def find_code(keypad, pos):
+def find_code(code, keypad, pos):
     final_code = ""
     keypad = [["x"] + line + ["x"] for line in keypad]
     x_range = range(len(keypad[0]) + 2)
@@ -34,5 +31,8 @@ def find_code(keypad, pos):
 
     print(final_code)
 
-find_code(keypad1, [1, 1])
-find_code(keypad2, [3, 1])
+with open("slepice.txt", "r") as f:
+    code = f.read()
+
+find_code(code, keypad1, [1, 1])
+find_code(code, keypad2, [3, 1])
