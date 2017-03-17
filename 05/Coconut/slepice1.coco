@@ -1,0 +1,13 @@
+import hashlib
+
+@recursive_iterator
+def hash_generator(code, salt=0):
+    hash_ = hashlib.md5(code + bytes(str(salt), 'utf-8')).hexdigest()
+    if hash_[:5] == "00000":
+        return (hash_,) :: hash_generator(code, salt + 1)
+    else:
+        return hash_generator(code, salt + 1)
+
+zero_starting_hashes = hash_generator(b"uqwqemis")
+password = zero_starting_hashes$[:8] |> map$(_ -> _[5]) |> list
+print("".join(password))

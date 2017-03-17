@@ -1,5 +1,3 @@
-from pprint import pprint
-
 def parse_instruction(instruction):
     if instruction[:3] == "cpy":
         value, name = instruction[4:].split(" ")
@@ -23,5 +21,4 @@ instructions = list(map(parse_instruction, instructions.splitlines()))
 while pos < len(instructions):
     exec(instructions[pos])
     pos += 1
-
 print(a, b, c, d)

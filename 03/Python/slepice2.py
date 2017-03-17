@@ -10,6 +10,9 @@ for instruction in instructions.splitlines():
     triangles[2][lines] = int(instruction[10:])
     lines += 1
     if lines == 3:
+        print(tuple(triangles[0]))
+        print(tuple(triangles[1]))
+        print(tuple(triangles[2]))
         for triangle in triangles:
             triangle = sorted(triangle)
             if triangle[0] + triangle[1] > triangle[2]:

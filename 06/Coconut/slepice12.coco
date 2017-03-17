@@ -1,0 +1,8 @@
+from collections import Counter
+
+with open("slepice.txt", "r") as f:
+    message = f.read()
+
+common = message.splitlines() |*> zip$() |> map$(->Counter(_).most_common()[-1][0])
+
+print("".join(most_common))

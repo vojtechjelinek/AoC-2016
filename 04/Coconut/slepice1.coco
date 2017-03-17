@@ -1,0 +1,23 @@
+from collections import Counter
+
+with open("slepice.txt", "r") as f:
+    rooms = f.read()
+
+@recursive_iterator
+def parse_rooms([]) = (0,)
+
+@recursive_iterator..addpattern(parse_rooms)
+def parse_rooms([room] + rest):
+    index = room.find("[")
+    id_ = int(room[index-3:index])
+    checksum = room[index+1:index+6]
+    code = room[:index-3].replace("-", "")
+    counter = (Counter(code) |> .most_common() |>
+               sorted$(key=->(100 - _[1], _[0])) |>
+               map$(-> _[0]))
+    if checksum == "".join(counter$[:5]):
+        return (id_,) :: parse_rooms(rest)
+    else:
+        return parse_rooms(rest)
+
+rooms.splitlines() |> parse_rooms$() |> sum |> print

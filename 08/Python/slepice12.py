@@ -1,3 +1,7 @@
+import time
+import os
+clear = lambda: os.system('clear')
+
 with open("slepice.txt", "r") as f:
     instructions = f.read()
 display = [[" " for _ in range(50)] for i in range(6)]
@@ -19,6 +23,8 @@ for instruction in instructions.splitlines():
             val = column.pop()
             column.insert(0, val)
         display = [[column[j] if pos == i else display[j][i] for i in range(50)] for j in range(6)]
-    
-print("\n".join(["".join(line) for line in display]))
+    clear()
+    print("\n".join(["".join(line) for line in display]))
+    time.sleep(0.25)
+
 print(sum(("".join(line).count("█") for line in display)))

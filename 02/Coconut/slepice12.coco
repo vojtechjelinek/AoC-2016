@@ -1,0 +1,39 @@
+moves = {
+  'U': (-1, 0),
+  'D': (1, 0),
+  'L': (0, -1),
+  'R': (0, 1)
+}
+
+def parse_map(name):
+    with open(name, "r") as f:
+        map_text = f.read()
+    lines = map_text.splitlines()
+    empty_line = ['#'] * int((len(lines[0]) + 1) / 2 + 2)
+    lines = lines |> map$((x) -> ['#'] + x.split(' ') + ['#'])
+    return [empty_line] + list(lines) + [empty_line]
+
+def perform_char([], keypad, pos) = pos
+
+@addpattern(perform_char)
+def perform_char([char] + rest, keypad, (i, j)):
+    delta_i, delta_j = moves[char]
+    if keypad[delta_i + i][delta_j + j] != "#":
+        return perform_char(rest, keypad, (i + delta_i, j + delta_j))
+    else:
+        return perform_char(rest, keypad, (i, j))
+
+def perform_line([], keypad, pos) = ""
+
+@addpattern(perform_line)
+def perform_line([line] + rest, keypad, pos):
+    i, j = perform_char(list(line), keypad, pos)
+    return keypad[i][j] + perform_line(rest, keypad, (i, j))
+
+def find_code(instructs, keypad, pos) = perform_line(instructs.splitlines(), keypad, pos)
+
+with open("slepice.txt", "r") as f:
+    instructs = f.read()
+
+parse_map('map1.txt') |> find_code$(instructs, ?, (1, 1)) |> print
+parse_map('map2.txt') |> find_code$(instructs, ?, (2, 1)) |> print

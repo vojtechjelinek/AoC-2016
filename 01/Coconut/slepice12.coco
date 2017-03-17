@@ -1,0 +1,43 @@
+data point(x, y, orientation, visited_poses):
+    def move(self, 0) = self
+    @addpattern(move)
+    def move(self, steps):
+        case self.orientation:
+            match 0:
+                return self.visit()._replace(y = self.y + 1).move(steps - 1)
+            match 1:
+                return self.visit()._replace(x = self.x + 1).move(steps - 1)
+            match 2:
+                return self.visit()._replace(y = self.y - 1).move(steps - 1)
+            match 3:
+                return self.visit()._replace(x = self.x - 1).move(steps - 1)
+
+    def visit(self) =
+        self._replace(visited_poses=self.visited_poses+[(self.x,self.y)])
+
+    def perform_instruction(self, inst) = self.turn(inst[0]).move(int(inst[1:]))
+
+    def turn(self, "R") =
+        self._replace(orientation = (self.orientation + 1) % 4)
+    @addpattern(turn)
+    def turn(self, "L") =
+        self._replace(orientation = (self.orientation - 1) % 4)
+
+    def first_intersection(self):
+        visited_before = (i) -> self.visited_poses[i] in self.visited_poses[:i]
+        j = (self.visited_poses |> len |> range |> filter$(visited_before))$[0]
+        x, y = self.visited_poses[j]
+        return point(x, y, 0, 0)
+
+    def __abs__(self) = abs(self.x - self.y)
+
+def perform_instructions(pos, [instruct] :: rest) =
+    perform_instructions(pos.perform_instruction(instruct), rest)
+
+@addpattern(perform_instructions)
+def perform_instructions(pos, (||)) = (abs(pos), abs(pos.first_intersection()))
+
+with open("slepice.txt", "r") as f:
+    instructions = f.read()
+
+instructions.split(", ") |> perform_instructions$(point(0, 0, 0, [])) |> print

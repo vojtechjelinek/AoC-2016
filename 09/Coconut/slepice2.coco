@@ -1,0 +1,22 @@
+def get_mark_info(compressed):
+    mark_end = compressed.find(")")
+    mark = compressed[1:mark_end]
+    n, repeats = mark.split('x') |> map$(int)
+    return (mark_end, n, repeats)
+
+def decompress("") = 0
+
+@addpattern(decompress)
+def decompress(compressed if compressed[0] == "("):
+    mark_end, n, repeats = get_mark_info(compressed)
+    decompressed_len = decompress(compressed[mark_end + 1:mark_end + n + 1]) * repeats
+    pos = mark_end + n + 1
+    return decompressed_len + decompress(compressed[pos:])
+
+@addpattern(decompress)
+def decompress(compressed) = 1 + decompress(compressed[1:])
+
+with open("slepice.txt", "r") as f:
+    compressed = f.read().strip()
+
+decompress(compressed) |> print

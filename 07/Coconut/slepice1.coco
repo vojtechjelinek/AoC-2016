@@ -1,0 +1,30 @@
+
+def check_network_name(abba_outside, inside_brackets, []) = abba_outside
+
+@addpattern(check_network_name)
+def check_network_name(abba_outside, inside_brackets, [quartet] + rest):
+    if quartet[0] in "[]":
+        return check_network_name(abba_outside, not inside_brackets, rest)
+
+    if quartet == "".join(reversed(quartet)) and quartet[0] != quartet[1]:
+        if inside_brackets:
+            return False
+        else:
+            abba_outside = True
+
+    return check_network_name(abba_outside, inside_brackets, rest)
+
+def check_networks([], count) = count
+
+@addpattern(check_networks)
+def check_networks([network] + rest, count=0):
+    valid = (range(len(network[:-3])) |>
+             map$(->network[_:_+4]) |>
+             list |>
+             check_network_name$(False, False))
+
+    return check_networks(rest, count + int(valid))
+
+with open("slepice.txt", "r") as f:
+    networks = f.read()
+networks.splitlines() |> check_networks$() |> print

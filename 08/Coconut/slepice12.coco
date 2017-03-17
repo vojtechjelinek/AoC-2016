@@ -1,0 +1,35 @@
+DISPLAY_WIDTH = 50
+DISPLAY_HEIGHT = 6
+
+def shift(line, amount):
+    amount %= len(line)
+    return line[len(line) - amount:] + line[:len(line) - amount]
+
+def exec_instructions(display, []) = display
+
+@addpattern(exec_instructions)
+def exec_instructions(display, [instruction] + rest):
+    if instruction[:4] == "rect":
+        width, height = instruction[5:].split("x") |> map$(int)
+        display = [["█" if width > i else display[j][i] for i in range(DISPLAY_WIDTH)] if height > j else display[j] for j in range(DISPLAY_HEIGHT)])
+    else:
+        pos, amount = instruction.split(" by ")
+        pos, amount = int(pos.split("=")[1]), int(amount)
+        if instruction[7:10] == "row":
+            display[pos] = shift(display[pos], amount)
+        else:
+            column = [display[i][pos] for i in range(DISPLAY_HEIGHT)]
+            column = shift(column, amount)
+            display = [[column[j] if pos == i else display[j][i] for i in range(DISPLAY_WIDTH)] for j in range(DISPLAY_HEIGHT)]
+
+    return exec_instructions(display, rest)
+
+
+with open("slepice.txt", "r") as f:
+    instructions = f.read()
+
+display = [[" " for _ in range(50)] for i in range(6)]
+display = instructions.splitlines() |> exec_instructions$(display)
+
+print("\n".join(["".join(line) for line in display]))
+print(sum(("".join(line).count("█") for line in display)))

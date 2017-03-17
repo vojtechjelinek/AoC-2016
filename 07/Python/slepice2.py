@@ -16,5 +16,3 @@ for network in networks.splitlines():
             else:
                 abas.add(network[i:i+3])
     count += int(len(abas.intersection(babs)) > 0)
-
-print(count)

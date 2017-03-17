@@ -1,0 +1,8 @@
+def factorial(n, acc=1):
+    case n:
+        match 0:
+            return acc
+        match _ is int if n > 0:
+            return factorial(n-1, acc*n)
+    else:
+        raise TypeError("the argument to factorial must be an integer >= 0")

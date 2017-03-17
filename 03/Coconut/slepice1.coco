@@ -1,0 +1,9 @@
+with open("slepice.txt", "r") as f:
+    instructs = f.read()
+
+def can_be_constructed([x, y, z]) = x + y > z
+
+parsed_instructs = (instructs.splitlines() |>
+                    map$((x) -> [int(x[i:i+5]) for i in range(0, 11, 5)]) |>
+                    map$(sorted))
+parsed_instructs |> map$(can_be_constructed) |> sum |> print

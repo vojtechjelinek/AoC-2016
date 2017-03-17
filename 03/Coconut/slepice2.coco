@@ -1,0 +1,12 @@
+with open("slepice.txt", "r") as f:
+    instructs = f.read()
+
+pinstr = (instructs.splitlines() |>
+          map$((x) -> [int(x[i:i+5]) for i in range(0, 11, 5)]))
+
+transformed_instructs = (range(0, len(pinstr), 3) |>
+                         map$((i) -> zip(*pinstr[i:i+3]) |> list) |>
+                         reduce$(+) |>
+                         map$(sorted))
+
+transformed_instructs |> map$(def ([x, y, z]) -> x + y > z) |> sum |> print

@@ -1,0 +1,36 @@
+
+def check_network_name(abas, babs, inside_brackets, []) = len(abas.intersection(babs)) > 0
+
+@addpattern(check_network_name)
+def check_network_name(abas, babs, inside_brackets, [triplet] + rest):
+    if triplet[0] in "[]":
+        return check_network_name(abas, babs, not inside_brackets, rest)
+
+    if (triplet[0] == triplet[2] and triplet[0] != triplet[1] and
+        triplet[1] not in "[]"):
+        if inside_brackets or inside_brackets:
+            return check_network_name(abas,
+                babs | set(("{1}{0}{1}".format(triplet[0], triplet[1]),)),
+                inside_brackets, rest)
+        else:
+            return check_network_name(abas | set((triplet,)), babs,
+                inside_brackets, rest)
+
+    return check_network_name(abas, babs, inside_brackets, rest)
+
+
+def check_networks([], count) = count
+
+@addpattern(check_networks)
+def check_networks([network] + rest, count=0):
+    valid = (range(len(network[:-2])) |>
+             map$(->network[_:_+3]) |>
+             list |>
+             check_network_name$(set(), set(), False))
+
+    return check_networks(rest, count + int(valid))
+
+with open("slepice.txt", "r") as f:
+    networks = f.read()
+
+networks.splitlines() |> check_networks$() |> print

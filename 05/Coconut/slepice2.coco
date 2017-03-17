@@ -1,0 +1,18 @@
+import hashlib
+
+@recursive_iterator
+def hash_generator(code, found_indexes, salt=0):
+    hash_ = hashlib.md5(code + bytes(str(salt), 'utf-8')).hexdigest()
+    if not hash_[5].isdigit():
+        return hash_generator(code, found_indexes, salt + 1)
+    pass_pos = int(hash_[5])
+    if (hash_[:5] == "00000" and
+        0 <= pass_pos < 8 and
+        pass_pos not in found_indexes):
+        return (hash_,) :: hash_generator(code, found_indexes | set((pass_pos,)), salt + 1)
+    else:
+        return hash_generator(code, found_indexes, salt + 1)
+
+zero_starting_hashes = hash_generator(b"uqwqemis", set())
+password = zero_starting_hashes$[:8] |> sorted$(key=-> int(_[5])) |> map$(-> _[6]) |> list
+print("".join(password))
